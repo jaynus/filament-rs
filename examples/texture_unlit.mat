@@ -1,0 +1,29 @@
+material {
+    name : "Texture Unlit",
+    parameters : [
+        {
+           type : sampler2d,
+           name : texture
+        }
+    ],
+    requires : [
+        uv0
+    ],
+    shadingModel : unlit,
+    blending : opaque
+}
+
+fragment {
+    void material(inout MaterialInputs material) {
+        prepareMaterial(material);
+
+        // Fetch the base color from texture.
+        vec3 colorSRGB = texture(materialParams_texture, getUV0()).xyz;
+
+        // Convert sRGB to linear (cheapest version).
+        vec3 linear = colorSRGB * colorSRGB;
+
+        material.baseColor = vec4(linear, 1.0);
+    }
+}
+
